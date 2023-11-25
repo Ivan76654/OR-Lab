@@ -18,7 +18,7 @@ homeRouter.get('/', (req, res) => {
 				}
 			});
 
-			res.render('home', {
+			res.json({
 				rowCount: result.rowCount,
 				data: formattedResult
 			});
@@ -29,6 +29,5 @@ homeRouter.get('/', (req, res) => {
 
 	})();
 });
-
 
 module.exports = homeRouter;
