@@ -5,17 +5,17 @@ function TableView({ data }) {
 		<table>
 			<thead>
 				<tr>
-					<th>League ID</th>
-					<th>League Level</th>
-					<th>Number Of Teams</th>
-					<th>Team ID</th>
-					<th>Team Name</th>
-					<th>Founded</th>
 					<th>Player ID</th>
 					<th>First Name</th>
 					<th>Last Name</th>
 					<th>Date Of Birth</th>
 					<th>Elo Rank</th>
+					<th>Team ID</th>
+					<th>Team Name</th>
+					<th>Founded</th>
+					<th>League ID</th>
+					<th>League Rank</th>
+					<th>Number Of Teams</th>
 				</tr>
 			</thead>
 			<tbody>
