@@ -1,0 +1,26 @@
+* {
+	box-sizing: border-box;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+}
+
+table {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+thead {
+	background-color: aquamarine;
+}
+
+th,
+td {
+	border: 1px solid black;
+	padding: 5px;
+}
