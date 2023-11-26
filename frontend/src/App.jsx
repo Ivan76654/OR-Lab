@@ -5,7 +5,7 @@ import Header from './components/Header';
 import TableDataDisplay from './components/TableDataDisplay';
 
 function App() {
-	const host = 'http://localhost:3000';
+	const host = import.meta.env.VITE_SERVER_HOST;
 
 	const [data, setData] = useState([]);
 
