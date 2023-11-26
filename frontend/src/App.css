@@ -1,4 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
 * {
+	padding: 0;
+	margin: 0;
 	box-sizing: border-box;
 }
 
@@ -8,6 +12,11 @@ html {
 
 body {
 	height: 100%;
+	font-family: 'Open Sans', sans-serif;
+}
+
+#root {
+	padding: 5px;
 }
 
 table {
@@ -17,7 +26,7 @@ table {
 }
 
 thead {
-	background-color: aquamarine;
+	background-color: lightblue;
 }
 
 tbody tr:nth-child(even) {
@@ -29,4 +38,41 @@ td {
 	text-align: left;
 	padding: 5px;
 	border: 1px solid black;
+}
+
+section.filter-form-section {
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+form.filter-form {
+	display: flex;
+	justify-content: space-between;
+	width: 30%;
+	min-width: 475px;
+}
+
+select:focus,
+button:focus,
+input:focus {
+	outline: none;
+}
+
+section.filter-form-section button[type="submit"] {
+	border: 1px solid white;
+	color: white;
+	background-color: blue;
+	border-radius: 4px;
+}
+
+button:active,
+button:hover {
+	cursor: pointer;
+	border-color: aqua;
+	outline: none;
+}
+
+form.filter-form * {
+	font-size: inherit;
+	padding: 6px;
 }
