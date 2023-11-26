@@ -1,5 +1,6 @@
 const express = require('express');
 const { query } = require('../db');
+const { format } = require('date-fns');
 
 const homeRouter = express.Router();
 
@@ -13,8 +14,8 @@ homeRouter.get('/', (req, res) => {
 			const formattedResult = result.rows.map(row => {
 				return {
 					...row,
-					founded: `${row.founded.getDate()}.${row.founded.getMonth()}.${row.founded.getFullYear()}`,
-					date_of_birth: `${row.date_of_birth.getDate()}.${row.date_of_birth.getMonth()}.${row.date_of_birth.getFullYear()}`
+					founded: format(row.founded, 'dd.MM.yyyy'),
+					date_of_birth: format(row.date_of_birth, 'dd.MM.yyyy')
 				}
 			});
 
@@ -25,6 +26,7 @@ homeRouter.get('/', (req, res) => {
 
 		} catch(err) {
 			console.log(err);
+			res.sendStatus(500);
 		}
 
 	})();
