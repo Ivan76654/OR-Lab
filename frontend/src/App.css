@@ -41,6 +41,9 @@ td {
 }
 
 section.filter-form-section {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	font-size: 16px;
 	margin-bottom: 10px;
 }
@@ -65,14 +68,33 @@ section.filter-form-section button[type="submit"] {
 	border-radius: 4px;
 }
 
-button:active,
-button:hover {
+section.filter-form-section button:active,
+section.filter-form-section button:hover {
 	cursor: pointer;
 	border-color: aqua;
-	outline: none;
 }
 
 form.filter-form * {
 	font-size: inherit;
 	padding: 6px;
+}
+
+div.export-links-container * {
+	font-size: inherit;
+	padding: 6px;
+}
+
+ul.export-links-list {
+	display: flex;
+	list-style: none;
+}
+
+ul.export-links-list a {
+	color: blue;
+	text-decoration: none;
+}
+
+ul.export-links-list a:hover {
+	cursor: pointer;
+	color: purple;
 }
