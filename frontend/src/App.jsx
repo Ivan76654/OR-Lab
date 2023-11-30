@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import './App.css';
 import FilterForm from './components/FilterForm';
 import Header from './components/Header';
 import TableDataDisplay from './components/TableDataDisplay';
+import './App.css';
 
 function App() {
 	const host = import.meta.env.VITE_SERVER_HOST;
@@ -21,13 +21,21 @@ function App() {
 		}
 
 		const filterData = async () => {
-			const response = await fetch(`${host}/filter`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(requestBody)
-			});
+			let response;
+
+			if (!filterValueFormValue) {
+				response = await fetch(`${host}/`);
+
+			} else {
+				response = await fetch(`${host}/filter`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(requestBody)
+				});
+			}
+
 
 			if (response.ok) {
 				const body = await response.json();
@@ -38,9 +46,6 @@ function App() {
 			}
 
 		}
-
-		if (!filterValueFormValue)
-			return;
 
 		filterData();
 	}
