@@ -1,22 +1,26 @@
-function FilterForm() {
+function FilterForm({ filterField, filterValue, onFilterSearchSubmit }) {
 	function downloadCSV(e) {
 		e.preventDefault();
-
 	}
 
 	function downloadJSON(e) {
 		e.preventDefault();
 	}
 
+	function handleSearchSubmit(e) {
+		e.preventDefault();
+		onFilterSearchSubmit(e.target.elements);
+	}
+
 	return (
 		<section className='filter-form-section'>
 			<div className='filter-form-container'>
-				<form className='filter-form'>
-					<select id='filterField' name='field'>
-						<option value='all'>*</option>
+				<form className='filter-form' onSubmit={handleSearchSubmit}>
+					<select id='filterField' name='filterField'>
+						<option value='*'>All Columns</option>
 						<option value='player_id'>Player ID</option>
-						<option value='first_name'>First Name</option>
-						<option value='last_name'>Last Name</option>
+						<option value='player_first_name'>First Name</option>
+						<option value='player_last_name'>Last Name</option>
 						<option value='date_of_birth'>Date Of Birth</option>
 						<option value='elo_rank'>Elo Rank</option>
 						<option value='team_id'>Team ID</option>
@@ -27,9 +31,10 @@ function FilterForm() {
 						<option value='number_of_teams'>Number Of Teams</option>
 					</select>
 					<input
+						id='filterValue'
 						name='filterValue'
 						type='text'
-						placeholder='value'
+						placeholder='Filter value'
 					></input>
 					<button type='submit'>Search</button>
 				</form>
