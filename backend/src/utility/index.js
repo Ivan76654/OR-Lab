@@ -38,14 +38,14 @@ const playerColumns = [
 ];
 
 const teamColumns = [
-	'team_id',
-	'team_name',
+	'team_id', 
+	'team_name', 
 	'founded'
 ];
 
 const leagueColumns = [
-	'league_id',
-	'league_rank',
+	'league_id', 
+	'league_rank', 
 	'number_of_teams'
 ];
 
@@ -60,8 +60,7 @@ function formatDatesInResultSet(rows, dateFormat) {
 }
 
 function sqlFilterHelper(sqlQuery, params, filterField, filterValue, columns) {
-	if (!filterValue) 
-		return sqlQuery + ';';
+	if ((!columns.includes(filterField) && filterField !== '*') || !filterValue) return sqlQuery + ';';
 
 	switch (filterField) {
 		case '*':
@@ -93,6 +92,40 @@ function sqlFilterHelper(sqlQuery, params, filterField, filterValue, columns) {
 	return sqlQuery;
 }
 
+function toCSVString(headerRow, rows, numOfColumns) {
+	let csvString = '';
+
+	for (let i = 0; i < numOfColumns; i++) {
+		if (i === 0) {
+			csvString += headerRow[i];
+
+			continue;
+		}
+
+		csvString = `${csvString},${headerRow[i]}`;
+	}
+
+	csvString += '\n';
+
+	const keys = Object.keys(rows[0]);
+
+	for (let i = 0; i < rows.length; i++) {
+
+		for (let j = 0; j < numOfColumns; j++) {
+			if (j === 0) {
+				csvString += rows[i][keys[j]];
+
+				continue;
+			}
+
+			csvString = `${csvString},${rows[i][keys[j]]}`;
+		}
+
+		csvString += '\n';
+	}
+
+	return csvString;
+}
 
 module.exports = {
 	allColumns,
@@ -101,5 +134,6 @@ module.exports = {
 	teamColumns,
 	leagueColumns,
 	formatDatesInResultSet,
-	sqlFilterHelper
+	sqlFilterHelper,
+	toCSVString
 };

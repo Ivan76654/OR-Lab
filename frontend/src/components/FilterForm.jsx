@@ -1,9 +1,33 @@
+import FileSaver from 'file-saver';
+
 function FilterForm({ filterField, filterValue, onFilterSearchSubmit }) {
-	function downloadCSV(e) {
+	const host = import.meta.env.VITE_SERVER_HOST;
+
+	async function downloadCSV(e) {
 		e.preventDefault();
+
+		const requestBody = {
+			filterField,
+			filterValue
+		}
+
+		const response = await fetch(`${host}/download/csv`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(requestBody)
+		});
+
+		if (response.ok) {
+			const csvBlob = await response.blob();
+
+			FileSaver.saveAs(csvBlob, `data.csv`);
+		}
+
 	}
 
-	function downloadJSON(e) {
+	async function downloadJSON(e) {
 		e.preventDefault();
 	}
 
