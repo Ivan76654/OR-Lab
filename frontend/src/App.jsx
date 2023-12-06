@@ -8,7 +8,7 @@ function App() {
 	const host = import.meta.env.VITE_SERVER_HOST;
 
 	const [data, setData] = useState([]);
-	const [filterField, setFilterField] = useState('');
+	const [filterField, setFilterField] = useState('*');
 	const [filterValue, setFilterValue] = useState('');
 
 	function onFilterSearchSubmit(elements) {
@@ -17,25 +17,17 @@ function App() {
 
 		const requestBody = {
 			filterField: filterFieldFormValue,
-			filterValue: filterValueFormValue
-		}
+			filterValue: filterValueFormValue,
+		};
 
 		const filterData = async () => {
-			let response;
-
-			if (!filterValueFormValue) {
-				response = await fetch(`${host}/`);
-
-			} else {
-				response = await fetch(`${host}/filter`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(requestBody)
-				});
-			}
-
+			const response = await fetch(`${host}/data`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(requestBody),
+			});
 
 			if (response.ok) {
 				const body = await response.json();
@@ -44,15 +36,25 @@ function App() {
 				setFilterField(filterFieldFormValue);
 				setFilterValue(filterValueFormValue);
 			}
-
-		}
+		};
 
 		filterData();
 	}
 
 	useEffect(() => {
 		(async () => {
-			const response = await fetch(`${host}/`);
+			const requestBody = {
+				filterField: '*',
+				filterValue: ''
+			};
+
+			const response = await fetch(`${host}/data`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(requestBody),
+			});
 
 			if (response.ok) {
 				const body = await response.json();
