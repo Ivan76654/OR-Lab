@@ -1,7 +1,8 @@
 function Header(props) {
 	return (
 		<header>
-			<p>Header</p>
+			<h1>Amateur Table Tennis League Open Data</h1>
+			<hr />
 		</header>
 	);
 }
