@@ -107,6 +107,8 @@ function toCSVString(headerRow, rows, numOfColumns) {
 
 	csvString += '\n';
 
+	if (!rows.length) return csvString;
+
 	const keys = Object.keys(rows[0]);
 
 	for (let i = 0; i < rows.length; i++) {

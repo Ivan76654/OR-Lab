@@ -29,6 +29,25 @@ function FilterForm({ filterField, filterValue, onFilterSearchSubmit }) {
 
 	async function downloadJSON(e) {
 		e.preventDefault();
+
+		const requestBody = {
+			filterField,
+			filterValue
+		}
+
+		const response = await fetch(`${host}/download/json`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(requestBody)
+		});
+
+		if (response.ok) {
+			const result = await response.json();
+
+			FileSaver.saveAs(new Blob([JSON.stringify(result, null, 2)]), 'data.json');
+		}
 	}
 
 	function handleSearchSubmit(e) {
