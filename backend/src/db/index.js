@@ -11,7 +11,7 @@ const pool = new Pool({
 });
 
 module.exports = {
-	query: (sqlQuery, params) => {
+	query: async (sqlQuery, params) => {
 		return pool.query(sqlQuery, params).then((res) => {
 			console.log('Executing query:');
 			console.log(sqlQuery);

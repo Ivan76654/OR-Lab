@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "https://github.com/Ivan76654/OR-Lab/blob/master/schema.json",
+  "title": "Amateur Table Tennis League Open Data",
+  "description": "An open data set for amateur table tenis league which contains players, teams and leagues.",
+  "type": "object",
+  "required": [
+    "leagues"
+  ],
+  "properties": {
+    "leagues": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "required": [
+            "league_id",
+            "league_rank",
+            "number_of_teams",
+            "teams"
+          ],
+          "properties": {
+            "league_id": {
+              "type": "integer",
+              "description": "Represents unique league ID."
+            },
+            "league_rank": {
+              "type": "integer",
+              "description": "Represents league level with league rank 1 being the best."
+            },
+            "number_of_teams": {
+              "type": "integer",
+              "description": "Number of teams that play in the same league."
+            },
+            "teams": {
+              "type": "array",
+              "description": "An array which contains teams that play in the same league.",
+              "items": [
+                {
+                  "type": "object",
+                  "description": "An object that represents a team.",
+                  "required": [
+                    "team_id",
+                    "team_name",
+                    "founded",
+                    "players"
+                  ],
+                  "properties": {
+                    "team_id": {
+                      "type": "integer",
+                      "description": "Represents unique team ID."
+                    },
+                    "team_name": {
+                      "type": "string",
+                      "description": "Represents team name."
+                    },
+                    "founded": {
+                      "type": "string",
+                      "description": "Represents a date when the team was founded."
+                    },
+                    "players": {
+                      "type": "array",
+                      "description": "An array which contains players that play for the same team.",
+                      "items": [
+                        {
+                          "type": "object",
+                          "description": "An object that represents an individual player.",
+                          "required": [
+                            "player_id",
+                            "player_first_name",
+                            "player_last_name",
+                            "date_of_birth",
+                            "elo_rank"
+                          ],
+                          "properties": {
+                            "player_id": {
+                              "type": "integer",
+                              "description": "Represents unique player ID."
+                            },
+                            "player_first_name": {
+                              "type": "string",
+                              "description": "Represents player's first name."
+                            },
+                            "player_last_name": {
+                              "type": "string",
+                              "description": "Represents player's last name."
+                            },
+                            "date_of_birth": {
+                              "type": "string",
+                              "description": "Represents player's date of birth."
+                            },
+                            "elo_rank": {
+                              "type": "integer",
+                              "description": "An integer which describes how strong a certain player is."
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
