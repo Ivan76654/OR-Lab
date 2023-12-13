@@ -13,9 +13,7 @@ homeRouter.post('/data', (req, res) => {
 			let sqlQuery = 'SELECT leagues.*, teams.*, players.* FROM leagues NATURAL JOIN teams NATURAL JOIN players';
 			let params = [];
 
-			sqlQuery = sqlFilterHelper(sqlQuery, params, filterField, filterValue, allColumns);
-
-			console.log(sqlQuery);
+			sqlQuery = `${sqlFilterHelper(sqlQuery, params, filterField, filterValue, allColumns)} ORDER BY players.player_id, teams.team_id, leagues.league_id;`;
 
 			const result = await query(sqlQuery, params);
 
