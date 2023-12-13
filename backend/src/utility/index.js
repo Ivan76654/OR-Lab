@@ -60,7 +60,9 @@ function formatDatesInResultSet(rows, dateFormat) {
 }
 
 function sqlFilterHelper(sqlQuery, params, filterField, filterValue, columns) {
-	if ((!columns.includes(filterField) && filterField !== '*') || !filterValue) return sqlQuery + ';';
+	if ((!columns.includes(filterField) && filterField !== '*') || !filterValue) return sqlQuery;
+
+	filterValue = `%${filterValue}%`
 
 	switch (filterField) {
 		case '*':
@@ -68,21 +70,21 @@ function sqlFilterHelper(sqlQuery, params, filterField, filterValue, columns) {
 
 			for (let i = 0; i < columns.length; i++) {
 				if (i === columns.length - 1) {
-					filterHelper += ` LOWER(${columns[i]}::VARCHAR) = LOWER($1)`;
+					filterHelper += ` LOWER(${columns[i]}::VARCHAR) LIKE LOWER($1)`;
 
 					continue;
 				}
 
-				filterHelper += ` LOWER(${columns[i]}::VARCHAR) = LOWER($1) OR`;
+				filterHelper += ` LOWER(${columns[i]}::VARCHAR) LIKE LOWER($1) OR`;
 			}
 
 			params.push(filterValue);
-			sqlQuery = `${sqlQuery} ${filterHelper};`;
+			sqlQuery = `${sqlQuery} ${filterHelper}`;
 			break;
 
 		default:
 			sqlQuery = pgFormat(
-				`${sqlQuery} WHERE LOWER(%I::VARCHAR) = LOWER(%L);`,
+				`${sqlQuery} WHERE LOWER(%I::VARCHAR) LIKE LOWER(%L)`,
 				filterField,
 				filterValue
 			);

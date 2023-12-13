@@ -46,17 +46,17 @@ downloadRouter.post('/json', (req, res) => {
 		const filterField = req.body.filterField;
 		const filterValue = req.body.filterValue;
 
-		let playerSql = 'SELECT * FROM players';
-		let teamSql = 'SELECT * FROM teams';
-		let leagueSql = 'SELECT * FROM leagues';
+		let playerSql = 'SELECT DISTINCT players.* FROM leagues NATURAL JOIN teams NATURAL JOIN players';
+		let teamSql = 'SELECT DISTINCT teams.* FROM leagues NATURAL JOIN teams NATURAL JOIN players';
+		let leagueSql = 'SELECT DISTINCT leagues.* FROM leagues NATURAL JOIN teams NATURAL JOIN players';
 
 		let playerParams = [];
 		let teamParams = [];
 		let leagueParams = [];
 
-		playerSql = sqlFilterHelper(playerSql, playerParams, filterField, filterValue, playerColumns);
-		teamSql = sqlFilterHelper(teamSql, teamParams, filterField, filterValue, teamColumns);
-		leagueSql = sqlFilterHelper(leagueSql, leagueParams, filterField, filterValue, leagueColumns);
+		playerSql = `${sqlFilterHelper(playerSql, playerParams, filterField, filterValue, allColumns)} ORDER BY players.player_id;`;
+		teamSql = `${sqlFilterHelper(teamSql, teamParams, filterField, filterValue, allColumns)} ORDER BY teams.team_id;`;
+		leagueSql = `${sqlFilterHelper(leagueSql, leagueParams, filterField, filterValue, allColumns)} ORDER BY leagues.league_id;`;
 
 		const [playerResult, teamResult, leagueResult] = await Promise.all([
 			query(playerSql, playerParams),
@@ -105,6 +105,7 @@ downloadRouter.post('/json', (req, res) => {
 		res.json({
 			leagues: formattedLeagueResult
 		});
+
 	})();
 });
 
