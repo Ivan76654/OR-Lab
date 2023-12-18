@@ -4,9 +4,6 @@ const { query } = require('../db');
 const {
 	allColumns,
 	csvColumnHeaders,
-	playerColumns,
-	teamColumns,
-	leagueColumns,
 	formatDatesInResultSet,
 	sqlFilterHelper,
 	toCSVString
@@ -19,7 +16,7 @@ downloadRouter.post('/csv', (req, res) => {
 		const filterField = req.body.filterField;
 		const filterValue = req.body.filterValue;
 	
-		let sqlQuery = 'SELECT players.*, teams.*, leagues.* FROM leagues NATURAL JOIN teams NATURAL JOIN players';
+		let sqlQuery = 'SELECT player.*, team.*, league.* FROM league NATURAL JOIN team NATURAL JOIN player';
 		let params = [];
 		
 		sqlQuery = sqlFilterHelper(sqlQuery, params, filterField, filterValue, allColumns);
@@ -46,17 +43,17 @@ downloadRouter.post('/json', (req, res) => {
 		const filterField = req.body.filterField;
 		const filterValue = req.body.filterValue;
 
-		let playerSql = 'SELECT DISTINCT players.* FROM leagues NATURAL JOIN teams NATURAL JOIN players';
-		let teamSql = 'SELECT DISTINCT teams.* FROM leagues NATURAL JOIN teams NATURAL JOIN players';
-		let leagueSql = 'SELECT DISTINCT leagues.* FROM leagues NATURAL JOIN teams NATURAL JOIN players';
+		let playerSql = 'SELECT DISTINCT player.* FROM league NATURAL JOIN team NATURAL JOIN player';
+		let teamSql = 'SELECT DISTINCT team.* FROM league NATURAL JOIN team NATURAL JOIN player';
+		let leagueSql = 'SELECT DISTINCT league.* FROM league NATURAL JOIN team NATURAL JOIN player';
 
 		let playerParams = [];
 		let teamParams = [];
 		let leagueParams = [];
 
-		playerSql = `${sqlFilterHelper(playerSql, playerParams, filterField, filterValue, allColumns)} ORDER BY players.player_id;`;
-		teamSql = `${sqlFilterHelper(teamSql, teamParams, filterField, filterValue, allColumns)} ORDER BY teams.team_id;`;
-		leagueSql = `${sqlFilterHelper(leagueSql, leagueParams, filterField, filterValue, allColumns)} ORDER BY leagues.league_id;`;
+		playerSql = `${sqlFilterHelper(playerSql, playerParams, filterField, filterValue, allColumns)} ORDER BY player.player_id;`;
+		teamSql = `${sqlFilterHelper(teamSql, teamParams, filterField, filterValue, allColumns)} ORDER BY team.team_id;`;
+		leagueSql = `${sqlFilterHelper(leagueSql, leagueParams, filterField, filterValue, allColumns)} ORDER BY league.league_id;`;
 
 		const [playerResult, teamResult, leagueResult] = await Promise.all([
 			query(playerSql, playerParams),
@@ -105,7 +102,6 @@ downloadRouter.post('/json', (req, res) => {
 		res.json({
 			leagues: formattedLeagueResult
 		});
-
 	})();
 });
 

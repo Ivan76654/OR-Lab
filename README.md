@@ -15,9 +15,9 @@
 
 | Atribut         | Opis                            |
 |-----------------|---------------------------------|
-| League ID       | Jedinstveni identifikator lige |
+| League ID       | Jedinstveni identifikator lige  |
 | League Rank     | Razina lige                     |
-| Number Of Teams | Broj ekipa u pojedinoj ligi     |
+| League Name     | Naziv lige                      |
 
 ### Ekipa
 

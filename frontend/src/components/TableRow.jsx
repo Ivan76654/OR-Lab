@@ -11,7 +11,7 @@ function TableRow({ record }) {
 			<td>{record.founded}</td>
 			<td>{record.league_id}</td>
 			<td>{record.league_rank}</td>
-			<td>{record.number_of_teams}</td>
+			<td>{record.league_name}</td>
 		</tr>
 	);
 }

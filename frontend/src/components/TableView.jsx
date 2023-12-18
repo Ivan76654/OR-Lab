@@ -15,7 +15,7 @@ function TableView({ data }) {
 					<th>Founded</th>
 					<th>League ID</th>
 					<th>League Rank</th>
-					<th>Number Of Teams</th>
+					<th>League Name</th>
 				</tr>
 			</thead>
 			<tbody>
