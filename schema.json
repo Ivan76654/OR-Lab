@@ -16,7 +16,7 @@
           "required": [
             "league_id",
             "league_rank",
-            "number_of_teams",
+            "league_name",
             "teams"
           ],
           "properties": {
@@ -28,9 +28,9 @@
               "type": "integer",
               "description": "Represents league level with league rank 1 being the best."
             },
-            "number_of_teams": {
-              "type": "integer",
-              "description": "Number of teams that play in the same league."
+            "league_name": {
+              "type": "string",
+              "description": "Represents the name of the league."
             },
             "teams": {
               "type": "array",

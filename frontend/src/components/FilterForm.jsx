@@ -71,7 +71,7 @@ function FilterForm({ filterField, filterValue, onFilterSearchSubmit }) {
 						<option value='founded'>Founded</option>
 						<option value='league_id'>League ID</option>
 						<option value='league_rank'>League Rank</option>
-						<option value='number_of_teams'>Number Of Teams</option>
+						<option value='league_name'>League Name</option>
 					</select>
 					<input
 						id='filterValue'

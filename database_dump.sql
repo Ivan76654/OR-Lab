@@ -16,89 +16,109 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- Name: orLab; Type: DATABASE; Schema: -; Owner: postgres
---
-
-CREATE DATABASE "orLab" WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'Croatian_Croatia.1250';
-
-
-ALTER DATABASE "orLab" OWNER TO postgres;
-
-\connect "orLab"
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: leagues; Type: TABLE; Schema: public; Owner: postgres
+-- Name: league; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.leagues (
-    leagueid integer NOT NULL,
-    leaguerank smallint NOT NULL,
-    numberofteams smallint NOT NULL
+CREATE TABLE public.league (
+    league_id integer NOT NULL,
+    league_rank smallint NOT NULL,
+    league_name character varying(50) DEFAULT 'test'::character varying NOT NULL
 );
 
 
-ALTER TABLE public.leagues OWNER TO postgres;
+ALTER TABLE public.league OWNER TO postgres;
 
 --
--- Name: players; Type: TABLE; Schema: public; Owner: postgres
+-- Name: leagues_leagueid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.players (
-    playerid integer NOT NULL,
-    playerfirstname character varying(50) NOT NULL,
-    playerlastname character varying(50) NOT NULL,
-    dateofbirth date NOT NULL,
-    elorank integer NOT NULL,
-    teamid integer
+ALTER TABLE public.league ALTER COLUMN league_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.leagues_leagueid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
 
 
-ALTER TABLE public.players OWNER TO postgres;
-
 --
--- Name: teams; Type: TABLE; Schema: public; Owner: postgres
+-- Name: player; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.teams (
-    teamid integer NOT NULL,
-    teamname character varying(255) NOT NULL,
+CREATE TABLE public.player (
+    player_id integer NOT NULL,
+    player_first_name character varying(50) NOT NULL,
+    player_last_name character varying(50) NOT NULL,
+    date_of_birth date NOT NULL,
+    elo_rank integer NOT NULL,
+    team_id integer
+);
+
+
+ALTER TABLE public.player OWNER TO postgres;
+
+--
+-- Name: players_playerid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.player ALTER COLUMN player_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.players_playerid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: team; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.team (
+    team_id integer NOT NULL,
+    team_name character varying(255) NOT NULL,
     founded date NOT NULL,
-    leagueid integer
+    league_id integer
 );
 
 
-ALTER TABLE public.teams OWNER TO postgres;
+ALTER TABLE public.team OWNER TO postgres;
 
 --
--- Data for Name: leagues; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Name: teams_teamid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-COPY public.leagues (leagueid, leaguerank, numberofteams) FROM stdin;
-1	1	6
+ALTER TABLE public.team ALTER COLUMN team_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.teams_teamid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Data for Name: league; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.league (league_id, league_rank, league_name) FROM stdin;
+1	1	1. Liga
 \.
 
 
 --
--- Data for Name: players; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: player; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.players (playerid, playerfirstname, playerlastname, dateofbirth, elorank, teamid) FROM stdin;
+COPY public.player (player_id, player_first_name, player_last_name, date_of_birth, elo_rank, team_id) FROM stdin;
 1	Matija	Perić	2000-04-03	1201	1
 2	Valentina	Pavletić	1997-05-09	1145	1
 3	Benjamin	Novaković	1977-08-27	1554	1
@@ -121,10 +141,10 @@ COPY public.players (playerid, playerfirstname, playerlastname, dateofbirth, elo
 
 
 --
--- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: team; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.teams (teamid, teamname, founded, leagueid) FROM stdin;
+COPY public.team (team_id, team_name, founded, league_id) FROM stdin;
 1	Knežija	2022-08-21	1
 2	Jarun	2021-03-13	1
 3	Purgeri	2023-01-07	1
@@ -135,59 +155,80 @@ COPY public.teams (teamid, teamname, founded, leagueid) FROM stdin;
 
 
 --
--- Name: leagues pkleagueid; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: leagues_leagueid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.leagues
-    ADD CONSTRAINT pkleagueid PRIMARY KEY (leagueid);
-
-
---
--- Name: players pkplayerid; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.players
-    ADD CONSTRAINT pkplayerid PRIMARY KEY (playerid);
+SELECT pg_catalog.setval('public.leagues_leagueid_seq', 2, true);
 
 
 --
--- Name: teams pkteamid; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: players_playerid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.teams
-    ADD CONSTRAINT pkteamid PRIMARY KEY (teamid);
-
-
---
--- Name: leagues uniqueleaguerank; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.leagues
-    ADD CONSTRAINT uniqueleaguerank UNIQUE (leaguerank);
+SELECT pg_catalog.setval('public.players_playerid_seq', 1, false);
 
 
 --
--- Name: teams uniqueteamname; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: teams_teamid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.teams
-    ADD CONSTRAINT uniqueteamname UNIQUE (teamname);
-
-
---
--- Name: teams fkteamleaugeid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.teams
-    ADD CONSTRAINT fkteamleaugeid FOREIGN KEY (leagueid) REFERENCES public.leagues(leagueid);
+SELECT pg_catalog.setval('public.teams_teamid_seq', 1, false);
 
 
 --
--- Name: players fkteamplayerid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: league pkleagueid; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.players
-    ADD CONSTRAINT fkteamplayerid FOREIGN KEY (teamid) REFERENCES public.teams(teamid);
+ALTER TABLE ONLY public.league
+    ADD CONSTRAINT pkleagueid PRIMARY KEY (league_id);
+
+
+--
+-- Name: player pkplayerid; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.player
+    ADD CONSTRAINT pkplayerid PRIMARY KEY (player_id);
+
+
+--
+-- Name: team pkteamid; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.team
+    ADD CONSTRAINT pkteamid PRIMARY KEY (team_id);
+
+
+--
+-- Name: league uniqueleaguerank; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.league
+    ADD CONSTRAINT uniqueleaguerank UNIQUE (league_rank);
+
+
+--
+-- Name: team uniqueteamname; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.team
+    ADD CONSTRAINT uniqueteamname UNIQUE (team_name);
+
+
+--
+-- Name: team fkteamleaugeid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.team
+    ADD CONSTRAINT fkteamleaugeid FOREIGN KEY (league_id) REFERENCES public.league(league_id);
+
+
+--
+-- Name: player fkteamplayerid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.player
+    ADD CONSTRAINT fkteamplayerid FOREIGN KEY (team_id) REFERENCES public.team(team_id);
 
 
 --

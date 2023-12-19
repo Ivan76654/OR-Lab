@@ -4,7 +4,7 @@ const { format } = require('date-fns');
 const allColumns = [
 	'league_id',
 	'league_rank',
-	'number_of_teams',
+	'league_name',
 	'team_id',
 	'team_name',
 	'founded',
@@ -26,7 +26,7 @@ const csvColumnHeaders = [
 	'Founded',
 	'League ID',
 	'League Rank',
-	'Number Of Teams'
+	'League Name'
 ];
 
 const playerColumns = [
@@ -46,7 +46,7 @@ const teamColumns = [
 const leagueColumns = [
 	'league_id', 
 	'league_rank', 
-	'number_of_teams'
+	'league_name'
 ];
 
 function formatDatesInResultSet(rows, dateFormat) {
