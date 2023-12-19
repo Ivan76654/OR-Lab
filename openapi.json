@@ -1,0 +1,557 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Amateur Table Tennis Open Data API",
+		"version": "1.0",
+		"description": "API specification for amateur table tennis open data",
+		"contact": {
+			"name": "Ivan Lovrić",
+			"email": "il52759@fer.hr"
+		},
+		"license": {
+			"name": "CC BY-NC-SA 4.0",
+			"url": "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en"
+		}
+	},
+	"servers": [
+		{
+			"url": "http://localhost:3000/api/v1"
+		}
+	],
+	"paths": {
+		"/data": {
+			"get": {
+				"summary": "Get all data",
+				"description": "Returns all data in a structured JSON format.",
+				"responses": {
+					"200": {
+						"description": "Fetched all data successfully.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["leagues"],
+									"properties": {
+										"leagues": {
+											"type": "array",
+											"minItems": 0,
+											"items": {
+												"$ref": "#/components/schemas/league"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/leagues": {
+			"get": {
+				"summary": "Get all leagues",
+				"description": "Returns all leagues data.",
+				"responses": {
+					"200": {
+						"description": "Fetched all leagues successfully.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"minItems": 0,
+									"items": {
+										"type": "object",
+										"properties": {
+											"league_id": {
+												"type": "integer",
+												"example": 1
+											},
+											"league_rank": {
+												"type": "integer",
+												"example": 1
+											},
+											"league_name": {
+												"type": "string",
+												"example": "1. Liga"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/teams": {
+			"get": {
+				"summary": "Get all teams",
+				"description": "Returns all teams data.",
+				"responses": {
+					"200": {
+						"description": "Fetched all teams successfully.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"minItems": 0,
+									"items": {
+										"type": "object",
+										"properties": {
+											"team_id": {
+												"type": "integer",
+												"example": 1
+											},
+											"team_name": {
+												"type": "string",
+												"example": "Team name"
+											},
+											"founded": {
+												"type": "string",
+												"format": "date",
+												"example": "2022-01-01"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/players": {
+			"get": {
+				"summary": "Get all players",
+				"description": "Returns all players data.",
+				"responses": {
+					"200": {
+						"description": "Fetched all players successfully.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"minItems": 0,
+									"items": {
+										"type": "object",
+										"properties": {
+											"player_id": {
+												"type": "integer",
+												"example": 1
+											},
+											"player_first_name": {
+												"type": "string",
+												"example": "John"
+											},
+											"player_last_name": {
+												"type": "string",
+												"example": "Doe"
+											},
+											"date_of_birth": {
+												"type": "string",
+												"format": "date",
+												"example": "2000-01-01"
+											},
+											"elo_rank": {
+												"type": "integer",
+												"example": 1200
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/players/{playerId}": {
+			"parameters": [
+				{
+					"name": "playerId",
+					"in": "path",
+					"description": "Player ID",
+					"schema": {
+						"type": "integer"
+					},
+					"required": true
+				}
+			],
+			"get": {
+				"summary": "Get one player",
+				"description": "Returns one player that matches the given ID.",
+				"responses": {
+					"200": {
+						"description": "Fetched one player successfully.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/player"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player with the given ID does not exist.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": 404
+										},
+										"message": {
+											"type": "string",
+											"example": "Not Found"
+										},
+										"response": {
+											"type": "object",
+											"nullable": true
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/openapi": {
+			"get": {
+				"summary": "Get OpenAPI specification",
+				"description": "Returns content of openapi.json file.",
+				"responses": {
+					"200": {
+						"description": "OpenAPI specification fetched successfully.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/openapi"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/addNewPlayer": {
+			"post": {
+				"summary": "Insert new player",
+				"description": "Inserts a new player into the provided team.",
+				"requestBody": {
+					"description": "Player information including team ID.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/player"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Inserted new player successfully.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/player"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing or invalid player information.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": 404
+										},
+										"message": {
+											"type": "string",
+											"example": "Not Found"
+										},
+										"response": {
+											"type": "object",
+											"nullable": true
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The team with the given ID does not exist.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": 404
+										},
+										"message": {
+											"type": "string",
+											"example": "Not Found"
+										},
+										"response": {
+											"type": "object",
+											"nullable": true
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/updateTeam/{teamId}": {
+			"parameters": [
+				{
+					"name": "teamId",
+					"in": "path",
+					"description": "Team ID",
+					"schema": {
+						"type": "integer"
+					},
+					"required": true
+				}
+			],
+			"put": {
+				"summary": "Update team information",
+				"description": "Update team information using provided team ID.",
+				"requestBody": {
+					"description": "Team information excluding team ID.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/team"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Team information updated successfully.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": 404
+										},
+										"message": {
+											"type": "string",
+											"example": "Not Found"
+										},
+										"response": {
+											"type": "object",
+											"nullable": true
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing or invalid team information.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": 404
+										},
+										"message": {
+											"type": "string",
+											"example": "Not Found"
+										},
+										"response": {
+											"type": "object",
+											"nullable": true
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Team with the given ID does not exist.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": 404
+										},
+										"message": {
+											"type": "string",
+											"example": "Not Found"
+										},
+										"response": {
+											"type": "object",
+											"nullable": true
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/removePlayer/{playerId}": {
+			"parameters": [
+				{
+					"name": "playerId",
+					"in": "path",
+					"description": "Player ID",
+					"schema": {
+						"type": "integer"
+					},
+					"required": true
+				}
+			],
+			"delete": {
+				"summary": "Remove existing player",
+				"description": "Removes player with the given ID.",
+				"responses": {
+					"200": {
+						"description": "Player deleted successfully.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": 404
+										},
+										"message": {
+											"type": "string",
+											"example": "Not Found"
+										},
+										"response": {
+											"type": "object",
+											"nullable": true
+										}
+									}
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "No Content"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"league": {
+				"type": "object",
+				"required": ["league_id", "league_rank", "league_name"],
+				"properties": {
+					"league_id": {
+						"type": "integer",
+						"example": 1
+					},
+					"league_rank": {
+						"type": "integer",
+						"example": 1
+					},
+					"league_name": {
+						"type": "string",
+						"example": "League name"
+					},
+					"teams": {
+						"type": "array",
+						"minItems": 0,
+						"items": {
+							"$ref": "#/components/schemas/team"
+						}
+					}
+				}
+			},
+			"team": {
+				"type": "object",
+				"required": ["team_id", "team_name", "founded"],
+				"properties": {
+					"team_id": {
+						"type": "integer",
+						"example": 1
+					},
+					"team_name": {
+						"type": "string",
+						"example": "Team name"
+					},
+					"founded": {
+						"type": "string",
+						"format": "date",
+						"example": "2023-01-01"
+					},
+					"league_id": {
+						"type": "integer",
+						"example": 1
+					},
+					"players": {
+						"type": "array",
+						"minItems": 0,
+						"items": {
+							"$ref": "#/components/schemas/player"
+						}
+					}
+				}
+			},
+			"player": {
+				"type": "object",
+				"required": [
+					"player_id",
+					"player_first_name",
+					"player_last_name",
+					"date_of_birth",
+					"elo_rank"
+				],
+				"properties": {
+					"player_id": {
+						"type": "integer",
+						"readOnly": true,
+						"example": 1
+					},
+					"player_first_name": {
+						"type": "string",
+						"example": "John"
+					},
+					"player_last_name": {
+						"type": "string",
+						"example": "Doe"
+					},
+					"date_of_birth": {
+						"type": "string",
+						"format": "date",
+						"example": "2000-01-01"
+					},
+					"elo_rank": {
+						"type": "integer",
+						"example": 1200
+					},
+					"team_id": {
+						"type": "integer",
+						"example": 1
+					}
+				}
+			},
+			"openapi": {
+				"type": "string",
+				"description": "This document."
+			}
+		}
+	}
+}
