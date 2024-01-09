@@ -80,6 +80,69 @@ paths:
                       type: string
                       format: "date"
                       example: "2022-01-01"
+  /teams/{teamId}:
+    parameters:
+      - name: "teamId"
+        in: "path"
+        description: "Team ID"
+        schema:
+          type: integer
+        required: true
+    put:
+      summary: "Update team information"
+      description: "Update team information using provided team ID."
+      requestBody:
+        description: "Team information excluding team ID."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/team"
+      responses:
+        200:
+          description: "Updated team with ID &lt;teamId&gt; successfully."
+          content:
+            application/json:
+              schema:
+                properties:
+                  "status":
+                    type: string
+                    example: 200
+                  "message":
+                    type: string
+                    example: "OK"
+                  "response":
+                    type: object
+                    nullable: true
+        400:
+          description: "Missing or invalid team information."
+          content:
+            application/json:
+              schema:
+                properties:
+                  "status":
+                    type: string
+                    example: 400
+                  "message":
+                    type: string
+                    example: "Bad request"
+                  "response":
+                    type: object
+                    nullable: true
+        404:
+          description: "Team with ID &lt;teamId&gt; does not exist."
+          content:
+            application/json:
+              schema:
+                properties:
+                  "status":
+                    type: string
+                    example: 404
+                  "message":
+                    type: string
+                    example: "Not Found"
+                  "response":
+                    type: object
+                    nullable: true
   /players:
     get:
       summary: "Get all players"
@@ -111,51 +174,6 @@ paths:
                     "elo_rank":
                       type: integer
                       example: 1200
-  /players/{playerId}:
-    parameters:
-      - name: "playerId"
-        in: path
-        description: "Player ID"
-        schema:
-          type: integer
-        required: true
-    get:
-      summary: "Get one player"
-      description: "Returns one player that matches the given ID."
-      responses:
-        200:
-          description: "Fetched one player successfully."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/player"
-        404:
-          description: "Player with the given ID does not exist."
-          content:
-            application/json:
-              schema:
-                properties:
-                  "status":
-                    type: string
-                    example: 404
-                  "message":
-                    type: string
-                    example: "Not Found"
-                  "response":
-                    type: object
-                    nullable: true
-  /openapi:
-    get:
-      summary: "Get OpenAPI specification"
-      description: "Returns content of openapi.json file."
-      responses:
-        200:
-          description: "OpenAPI specification fetched successfully."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/openapi"
-  /addNewPlayer:
     post:
       summary: "Insert new player"
       description: "Inserts a new player into the provided team."
@@ -180,15 +198,15 @@ paths:
                 properties:
                   "status":
                     type: string
-                    example: 404
+                    example: 400
                   "message":
                     type: string
-                    example: "Not Found"
+                    example: "Bad request"
                   "response":
                     type: object
                     nullable: true
         404:
-          description: "The team with the given ID does not exist."
+          description: "Team with ID &lt;teamId&gt; does not exist."
           content:
             application/json:
               schema:
@@ -202,83 +220,60 @@ paths:
                   "response":
                     type: object
                     nullable: true
-  /updateTeam/{teamId}:
-    parameters:
-      - name: "teamId"
-        in: "path"
-        description: "Team ID"
-        schema:
-          type: integer
-        required: true
-    put:
-      summary: "Update team information"
-      description: "Update team information using provided team ID."
-      requestBody:
-        description: "Team information excluding team ID."
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/team"
-      responses:
-        200:
-          description: "Team information updated successfully."
-          content:
-            application/json:
-              schema:
-                properties:
-                  "status":
-                    type: string
-                    example: 404
-                  "message":
-                    type: string
-                    example: "Not Found"
-                  "response":
-                    type: object
-                    nullable: true
-        400:
-          description: "Missing or invalid team information."
-          content:
-            application/json:
-              schema:
-                properties:
-                  "status":
-                    type: string
-                    example: 404
-                  "message":
-                    type: string
-                    example: "Not Found"
-                  "response":
-                    type: object
-                    nullable: true
-        404:
-          description: "Team with the given ID does not exist."
-          content:
-            application/json:
-              schema:
-                properties:
-                  "status":
-                    type: string
-                    example: 404
-                  "message":
-                    type: string
-                    example: "Not Found"
-                  "response":
-                    type: object
-                    nullable: true
-  /removePlayer/{playerId}:
+  /players/{playerId}:
     parameters:
       - name: "playerId"
-        in: "path"
+        in: path
         description: "Player ID"
         schema:
           type: integer
         required: true
+    get:
+      summary: "Get one player"
+      description: "Returns one player that matches the given ID."
+      responses:
+        200:
+          description: "Fetched player with ID &lt;playerId&gt; successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/player"
+        404:
+          description: "Player with ID &lt;playerId&gt; does not exist."
+          content:
+            application/json:
+              schema:
+                properties:
+                  "status":
+                    type: string
+                    example: 404
+                  "message":
+                    type: string
+                    example: "Not Found"
+                  "response":
+                    type: object
+                    nullable: true
     delete:
       summary: "Remove existing player"
       description: "Removes player with the given ID."
       responses:
         200:
-          description: "Player deleted successfully."
+          description: "Deleted player with ID &lt;playerId&gt; successfully."
+          content:
+            application/json:
+              schema:
+                properties:
+                  "status":
+                    type: string
+                    example: 200
+                  "message":
+                    type: string
+                    example: "OK"
+                  "response":
+                    type: object
+                    nullable: true
+        404:
+          description: "Player with ID &lt;playerId&gt; does not exist."
           content:
             application/json:
               schema:
@@ -292,8 +287,17 @@ paths:
                   "response":
                     type: object
                     nullable: true
-        204:
-          description: "No Content"
+  /openapi:
+    get:
+      summary: "Get OpenAPI specification"
+      description: "Returns OpenAPI specification in JSON format."
+      responses:
+        200:
+          description: "OpenAPI specification fetched successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/openapi"
 
 components:
   schemas:
@@ -374,4 +378,4 @@ components:
           example: 1
     openapi:
       type: string
-      description: "This document."
+      description: "OpenAPI specification."

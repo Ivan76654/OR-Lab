@@ -65,7 +65,7 @@ apiRouter.get('/data', (req, res, next) => {
 			res.status(200);
 			res.json({
 				status: 200,
-				message: "Fetched all data.",
+				message: "Fetched all data successfully.",
 				response: formattedLeagueResult
 			});
 
@@ -131,157 +131,7 @@ apiRouter.get('/teams', (req, res, next) => {
 	})();
 });
 
-apiRouter.get('/players', (req, res, next) => {
-	(async () => {
-		try {
-			const sqlQuery = 'SELECT player_id, player_first_name, player_last_name, date_of_birth, elo_rank FROM player ORDER BY player_id;';
-			const params = [];
-
-			const result = (await query(sqlQuery, params)).rows;
-
-			res.header('Content-Type', 'application/json');
-			res.status(200);
-			res.json({
-				status: 200,
-				message: 'Fetched all players successfully.',
-				response: result
-			});
-
-		} catch (err) {
-			next({
-				status: 500,
-				message: err.message
-			});
-		}
-
-	})();
-});
-
-apiRouter.get('/players/:playerId', (req, res, next) => {
-	(async () => {
-		try {
-			const playerId = req.params.playerId;
-			const sqlQuery = 'SELECT player_id, player_first_name, player_last_name, date_of_birth, elo_rank FROM player WHERE player_id = $1;';
-			const params = [playerId];
-
-			const result = (await query(sqlQuery, params)).rows;
-
-			if (result.length === 0) {
-				next({
-					status: 404,
-					message: `Player with ID ${playerId} does not exist.`
-				});
-			}
-
-			res.header('Content-Type', 'application/json');
-			res.status(200);
-			res.json({
-				status: 200,
-				message: 'Fetched all players successfully.',
-				response: result[0]
-			});
-
-		} catch (err) {
-			next({
-				status: 500,
-				message: err.message
-			});
-		}
-
-	})();
-});
-
-apiRouter.get('/openapi', (req, res, next) => {
-	(async () => {
-		try {
-			res.header('Content-Type', 'application/json');
-			res.status(200);
-			res.json({
-				status: 200,
-				message: "OpenAPI specification fetched successfully.",
-				response: openapi
-			});
-
-
-		} catch (err) {
-			next({
-				status: 500,
-				message: err.message
-			});
-		}
-
-	})();
-});
-
-apiRouter.post('/addNewPlayer', (req, res, next) => {
-	(async () => {
-		try {
-			const body = req.body;
-
-			if (!body.player_first_name || 
-				!body.player_last_name || 
-				!body.date_of_birth || 
-				!body.elo_rank || 
-				!body.team_id) {
-					next({
-						status: 400,
-						message: "Missing player information."
-					});
-			}
-
-			if (Number.isNaN(Date.parse(body.date_of_birth))) {
-				next({
-					status: 400,
-					message: "Invalid date format."
-				});
-			}
-
-			let sqlQuery = 'SELECT * FROM team WHERE team_id = $1;'
-			let params = [body.team_id]
-
-			const result = (await query(sqlQuery, params)).rowCount;
-
-			if (result === 0) {
-				next({
-					status: 404,
-					message: `Team with ID ${body.team_id} does not exist.`
-				});
-			}
-
-			sqlQuery = 'INSERT INTO player (player_first_name, player_last_name, date_of_birth, elo_rank, team_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;';
-			params = [
-				body.player_first_name,
-				body.player_last_name,
-				body.date_of_birth,
-				body.elo_rank,
-				body.team_id,
-			];
-			
-			let newPlayer = (await query(sqlQuery, params)).rows[0];
-			newPlayer = {
-				...newPlayer,
-				date_of_birth: format(newPlayer.date_of_birth, 'yyyy-MM-dd')
-			}
-	
-			res.header('Content-Type', 'application/json');
-			res.status(201);
-			res.json({
-				status: 201,
-				message: "Inserted new player successfully.",
-				response: newPlayer
-			});
-
-		} catch (err) {
-			next({
-				status: 500,
-				message: err.message
-			});
-		}
-
-	})();
-});
-
-apiRouter.put('/updateTeam/:teamId', (req, res, next) => {
+apiRouter.put('/teams/:teamId', (req, res, next) => {
 	(async () => {
 		try {
 
@@ -361,7 +211,135 @@ apiRouter.put('/updateTeam/:teamId', (req, res, next) => {
 	})();
 });
 
-apiRouter.delete('/removePlayer/:playerId', (req, res, next) => {
+apiRouter.get('/players', (req, res, next) => {
+	(async () => {
+		try {
+			const sqlQuery = 'SELECT player_id, player_first_name, player_last_name, date_of_birth, elo_rank FROM player ORDER BY player_id;';
+			const params = [];
+
+			const result = (await query(sqlQuery, params)).rows;
+
+			res.header('Content-Type', 'application/json');
+			res.status(200);
+			res.json({
+				status: 200,
+				message: 'Fetched all players successfully.',
+				response: result
+			});
+
+		} catch (err) {
+			next({
+				status: 500,
+				message: err.message
+			});
+		}
+
+	})();
+});
+
+apiRouter.post('/players', (req, res, next) => {
+	(async () => {
+		try {
+			const body = req.body;
+
+			if (!body.player_first_name || 
+				!body.player_last_name || 
+				!body.date_of_birth || 
+				!body.elo_rank || 
+				!body.team_id) {
+					next({
+						status: 400,
+						message: "Missing player information."
+					});
+			}
+
+			if (Number.isNaN(Date.parse(body.date_of_birth))) {
+				next({
+					status: 400,
+					message: "Invalid date format."
+				});
+			}
+
+			let sqlQuery = 'SELECT * FROM team WHERE team_id = $1;'
+			let params = [body.team_id]
+
+			const result = (await query(sqlQuery, params)).rowCount;
+
+			if (result === 0) {
+				next({
+					status: 404,
+					message: `Team with ID ${body.team_id} does not exist.`
+				});
+			}
+
+			sqlQuery = 'INSERT INTO player (player_first_name, player_last_name, date_of_birth, elo_rank, team_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;';
+			params = [
+				body.player_first_name,
+				body.player_last_name,
+				body.date_of_birth,
+				body.elo_rank,
+				body.team_id,
+			];
+			
+			let newPlayer = (await query(sqlQuery, params)).rows[0];
+			newPlayer = {
+				...newPlayer,
+				date_of_birth: format(newPlayer.date_of_birth, 'yyyy-MM-dd')
+			}
+	
+			res.header('Content-Type', 'application/json');
+			res.status(201);
+			res.json({
+				status: 201,
+				message: "Inserted new player successfully.",
+				response: newPlayer
+			});
+
+		} catch (err) {
+			next({
+				status: 500,
+				message: err.message
+			});
+		}
+
+	})();
+});
+
+apiRouter.get('/players/:playerId', (req, res, next) => {
+	(async () => {
+		try {
+			const playerId = req.params.playerId;
+			const sqlQuery = 'SELECT player_id, player_first_name, player_last_name, date_of_birth, elo_rank FROM player WHERE player_id = $1;';
+			const params = [playerId];
+
+			const result = (await query(sqlQuery, params)).rows;
+
+			if (result.length === 0) {
+				next({
+					status: 404,
+					message: `Player with ID ${playerId} does not exist.`
+				});
+			}
+
+			res.header('Content-Type', 'application/json');
+			res.status(200);
+			res.json({
+				status: 200,
+				message: `Fetched player with ID ${playerId} successfully.`,
+				response: result[0]
+			});
+
+		} catch (err) {
+			next({
+				status: 500,
+				message: err.message
+			});
+		}
+
+	})();
+});
+
+apiRouter.delete('/players/:playerId', (req, res, next) => {
 	(async () => {
 		try {
 			const playerId = req.params.playerId;
@@ -372,19 +350,41 @@ apiRouter.delete('/removePlayer/:playerId', (req, res, next) => {
 			const result = await query(sqlQuery, params);
 
 			if (result.rowCount === 0) {
-				res.status(204);
-				res.end();
-
-				return;
+				next({
+					status: 404,
+					message: `Player with ID ${playerId} does not exist.`
+				});
 			}
 
 			res.header('Content-Type', 'application/json');
 			res.status(200);
 			res.json({
 				status: 200,
-				message: "Player deleted successfully.",
+				message: `Deleted player with ID ${playerId} successfully.`,
 				response: null
 			});
+
+		} catch (err) {
+			next({
+				status: 500,
+				message: err.message
+			});
+		}
+
+	})();
+});
+
+apiRouter.get('/openapi', (req, res, next) => {
+	(async () => {
+		try {
+			res.header('Content-Type', 'application/json');
+			res.status(200);
+			res.json({
+				status: 200,
+				message: "OpenAPI specification fetched successfully.",
+				response: openapi
+			});
+
 
 		} catch (err) {
 			next({
