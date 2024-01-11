@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import FilterForm from './components/FilterForm';
 import Header from './components/Header';
-import TableDataDisplay from './components/TableDataDisplay';
+import Home from './components/Home';
 import './App.css';
 
 function App() {
@@ -67,14 +66,12 @@ function App() {
 	return (
 		<>
 			<Header />
-			<main>
-				<FilterForm
-					filterField={filterField}
-					filterValue={filterValue}
-					onFilterSearchSubmit={onFilterSearchSubmit}
-				/>
-				<TableDataDisplay data={data} />
-			</main>
+			<Home 
+				filterField={filterField}
+				filterValue={filterValue}
+				onFilterSearchSubmit={onFilterSearchSubmit}
+				data={data}
+			/>
 		</>
 	);
 }
