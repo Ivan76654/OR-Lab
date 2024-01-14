@@ -19,8 +19,73 @@ body {
 	padding: 5px;
 }
 
-header, h1 {
+header {
+	display: flex;
+	justify-content: space-between;
 	margin-bottom: 10px;
+}
+
+header h1#app-title {
+	text-wrap: nowrap;
+
+}
+
+nav.navbar-container {
+	min-width: 500px;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+ul.navbar {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	list-style-type: none;
+}
+
+ul.navbar li a {
+	color: blue;
+	font-size: 16px;
+	text-decoration: none;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+ul.navbar li a:hover {
+	cursor: pointer;
+	color: purple;
+}
+
+main.main-content {
+	margin-top: 10px;
+}
+
+main.error-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+main.error-content h1, main.error-content p.action-description {
+	text-wrap: nowrap;
+	margin-bottom: 10px;
+}
+
+main.error-content a {
+	color: blue;
+	text-decoration: none;
+}
+
+main.error-content a:hover {
+	color: purple;
+	cursor: pointer;
+}
+
+
+ul li span.user-field-label {
+	font-weight: bold;
 }
 
 table {
@@ -85,17 +150,20 @@ form.filter-form * {
 
 div.export-links-container * {
 	font-size: inherit;
-	padding: 6px;
 }
 
 ul.export-links-list {
+	min-width: 300px;
 	display: flex;
+	justify-content: flex-end;
 	list-style: none;
 }
 
 ul.export-links-list a {
 	color: blue;
 	text-decoration: none;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 ul.export-links-list a:hover {

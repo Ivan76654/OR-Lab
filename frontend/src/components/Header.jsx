@@ -1,9 +1,14 @@
-function Header(props) {
+import NavBar from './NavBar';
+
+function Header() {
 	return (
-		<header>
-			<h1>Amateur Table Tennis League Open Data</h1>
+		<>
+			<header>
+				<h1 id='app-title'>Amateur Table Tennis League Open Data</h1>
+				<NavBar />
+			</header>
 			<hr />
-		</header>
+		</>
 	);
 }
 
