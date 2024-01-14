@@ -3,7 +3,7 @@ import TableDataDisplay from './TableDataDisplay';
 
 function Home({ filterField, filterValue, onFilterSearchSubmit, data }) {
 	return (
-		<main>
+		<main className='main-content'>
 			<FilterForm
 				filterField={filterField}
 				filterValue={filterValue}
